@@ -1,0 +1,40 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  allCakes:
+    host: localhost
+    paths:
+      - '/cakeCatalog/allCakes'
+      - '/cakeCatalog/cakeByName/:cakeName'
+serviceEndpoints:
+  allCakes:
+    url: 'http://localhost:3000'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+  - jwt
+pipelines:
+  default:
+    apiEndpoints:
+      - allCakes
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - jwt:
+        - action:
+            secretOrPublicKey: "secretkey"
+            checkCredentialExistence: false
+      - proxy:
+          - action:
+              serviceEndpoint: allCakes
+              changeOrigin: true
+
